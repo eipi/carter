@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+        >
+<h:head>
+    <h:outputStylesheet library="css" name="TableStyle.css"  />
+</h:head>
+<h:body>
+    <h2>Carter Report Administration Tool</h2>
+    <hr />
+
+        <h:panelGrid columns="2">
+            <!--<h:form>-->
+                <!--<h:commandButton action="#{dataController.loadData(arcarReport)}" value="Reload from disk" />-->
+                <!--<h:commandButton action="#{dataController.saveData(arcarReport)}" value="Save all changes" />-->
+            <!--</h:form>-->
+            <h:form enctype="multipart/form-data" id="uploadBtn" >
+                <t:inputFileUpload value="#{dataController.uploadedFile}" />
+                <h:commandButton value="Apply" action="#{navigationController.processUploadedFile(arcarReport, dataController)}" />
+            </h:form>
+        </h:panelGrid>
+
+    <h1>ARCAR Tech Error Policies List</h1>
+    Last report processed : #{arcarReport.lastReportDate}
+
+    <h:dataTable value="#{arcarReport.getData()}" var="o"
+                 styleClass="order-table"
+                 headerClass="order-table-header"
+                 rowClasses="order-table-odd-row,order-table-even-row">
+
+        <h:column>
+            <!-- column header -->
+            <f:facet name="header">Policy Number</f:facet>
+            <!-- row record -->
+            <h:form>
+                <h:commandLink action="#{navigationController.openPolicy(arcarSession, o)}"
+                           value="#{o.policyNumber}">
+                    <!--<f:actionListener binding="\#{arcarSession.setActiveLineItem(o.policyNumber)}" />-->
+                </h:commandLink>
+            </h:form>
+        </h:column>
+        <h:column>
+            <f:facet name="header">New</f:facet>
+            #{o.isNew() ? "*" : ""}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Updated</f:facet>
+            #{o.isUpdated() ? "*" : ""}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Date Added</f:facet>
+            #{o.getAddedString()}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Status</f:facet>
+            #{o.status()}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Days on report</f:facet>
+            #{o.daysOnReport()}
+        </h:column>
+
+        <h:column>
+            <f:facet name="header">Assignee</f:facet>
+            <h:form>
+                <h:inputText value="#{o.assignee}" />
+                <h:commandButton value="Assign" action="#{navigationController.save(arcarReport)}" />
+            </h:form>
+
+        </h:column>
+
+    </h:dataTable>
+
+    <br/>
+    <!--<br/>-->
+    <!--<h2>Forward vs Redirection Navigation</h2>-->
+    <!--<hr />-->
+    <!--<h:form>-->
+        <!--<h3>Forward</h3>-->
+        <!--<h:commandButton action="page1" value="Page1" />-->
+        <!--<h3>Redirect</h3>-->
+        <!--<h:commandButton action="page1?faces-redirect=true"-->
+                         <!--value="Page1" />-->
+    <!--</h:form>-->
+</h:body>
+</html>

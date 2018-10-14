@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+<h:body>
+    <h2>Carter Report Administration Tool</h2>
+    <hr />
+    <h:form>
+        <h:commandButton action="#{navigationController.moveToHomePage}" value="Back to Home" />
+    </h:form>
+
+    <h1>ARCAR Tech Error Policy Detail</h1>
+
+    <h2>Policy Number : #{arcarSession.activeLineItem.getPolicyNumber()}</h2>
+    <h2>Date Added : #{arcarSession.activeLineItem.getAddedString()}</h2>
+    <h2>Assigned to : #{arcarSession.activeLineItem.assignee}</h2>
+
+    <h:dataTable value="#{arcarSession.activeLineItem.getBenefits()}" var="ben"
+                 styleClass="order-table"
+                 headerClass="order-table-header"
+                 rowClasses="order-table-odd-row,order-table-even-row">
+        <h:column>
+            <!-- column header -->
+            <f:facet name="header">Benefits</f:facet>
+            <!-- row record -->
+            #{ben.isNew() ? "* " : "  "}#{ben.getBenefitName()}
+        </h:column>
+    </h:dataTable>
+    <br />
+    <h:dataTable value="#{arcarSession.activeLineItem.getErrorMessages()}" var="err"
+                 styleClass="order-table"
+                 headerClass="order-table-header"
+                 rowClasses="order-table-odd-row,order-table-even-row">
+
+        <h:column>
+            <f:facet name="header">Errors</f:facet>
+            #{err.isNew() ? "* " : "  "}#{err.getErrorText()}
+        </h:column>
+
+    </h:dataTable>
+    <br />
+    <h:dataTable value="#{arcarSession.activeLineItem.getNotes()}" var="note"
+                 styleClass="order-table"
+                 headerClass="order-table-header"
+                 rowClasses="order-table-odd-row,order-table-even-row">
+        <h:column>
+            <f:facet name="header">Notes</f:facet>
+            #{note}
+        </h:column>
+    </h:dataTable>
+    <br/>
+    <h2>Attach Note</h2>
+    <br />
+    <h:form>
+        <h:panelGrid columns="2">
+        Author <h:inputText value="#{noteBean.author}" requiredMessage="Author is required." />
+        Note Text
+            <h:inputTextarea label="Note" value="#{noteBean.text}" requiredMessage="Note Text is required." />
+        </h:panelGrid>
+        <h:commandButton value="Attach Note" action="#{navigationController.attachNote(arcarSession.arcarReport, arcarSession.activeLineItem, noteBean)}" />
+    </h:form>
+
+</h:body>
+</html>
